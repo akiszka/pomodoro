@@ -38,12 +38,16 @@
 
 	 button {
 	     font-size: 1.2em;
-	     padding: .3em 3em;
-	     margin: 1.7em;
+	     padding: .3em 2.3em;
+	     margin: 0 .2em;
 
 	     border: none;
 	     background: #E6EFE9;
 	     color: #8F8389;
+	 }
+
+	 #buttons {
+	     margin: 1.7em;
 	 }
 	</style>
     </head>
@@ -52,7 +56,10 @@
 	<h2 id="workbreak">Work</h2>
 	<p id="time">25:00</p>
 
-	<button id="startstop" onclick="startTimer()">Start</button>
+	<section id="buttons">
+	    <button id="startstop" onclick="startTimer()">Start</button>
+	    <button id="startstop" onclick="resetTimer()">Reset</button>
+	</section>
     </body>
     <script>
      var clock = document.getElementById("time")
@@ -86,6 +93,12 @@
 		 timeleft = 25*60
 	     }
 	 }, 1000)
+     }
+
+     const resetTimer = () => {
+	 stopTimer()
+	 timeleft = 25*60
+	 printTime(timeleft)
      }
 
      const stopTimer = () => {
