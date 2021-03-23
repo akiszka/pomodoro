@@ -20,8 +20,35 @@
 
 	     font-family: sans-serif;
 
-	     background: #A7C4A0;
-	     color: #E6EFE9;
+	     background: #570000;
+	     color: #FDFFFF;
+	 }
+
+	 #workbreak {
+	     cursor: pointer;
+	     display: flex;
+	     flex-direction: row;
+	 }
+
+	 #work, #shortbreak, #longbreak {
+	     margin-right: .4em;
+	     padding: .3em;
+	 }
+
+	 .selected {
+	     color: white;
+	     background-color: #570000;
+	     border-radius: 20px;
+	 }
+
+	 #timer {
+	     background-color: #B10F2E;
+	     padding: 2em;
+	     border-radius: 20px;
+
+	     display: flex;
+	     flex-direction: column;
+	     align-items: center;
 	 }
 
 	 #time {
@@ -37,13 +64,23 @@
 	 }
 
 	 button {
+	     cursor: pointer;
+
 	     font-size: 1.2em;
 	     padding: .3em 2.3em;
 	     margin: 0 .2em;
 
 	     border: none;
-	     background: #E6EFE9;
-	     color: #8F8389;
+	     border-radius: 15px;
+	     background: #B10F2E;
+	     opacity: 0.4;
+	     color: #FDFFFF;
+
+	     transition: opacity .3s;
+	 }
+
+	 button:hover {
+	     opacity: .6;
 	 }
 
 	 #buttons {
@@ -52,9 +89,14 @@
 	</style>
     </head>
     <body>
-	<h1>Pomodoro timer</h1>
-	<h2 id="workbreak">Work</h2>
-	<p id="time">25:00</p>
+	<section id="timer">
+	    <div id="workbreak">
+		<h2 id="work" class="selected" onclick="clicked('work')">Work</h2>
+		<h2 id="shortbreak" onclick="clicked('shortbreak')">Short Break</h2>
+		<h2 id="longbreak" onclick="clicked('longbreak')">Long Break</h2>
+	    </div>
+	    <p id="time">25:00</p>
+	</section>
 
 	<section id="buttons">
 	    <button id="startstop" onclick="startTimer()">Start</button>
@@ -63,7 +105,8 @@
     </body>
     <script>
      var clock = document.getElementById("time")
-     var timeleft = 25*60 // 25 minutes
+     var clock_length = 25*60
+     var timeleft = clock_length
      var timer = null
 
      const printTime = seconds => {
@@ -79,7 +122,6 @@
      const startTimer = () => {
 	 var button = document.getElementById("startstop")
 	 button.innerHTML = "Stop"
-	 document.getElementById("workbreak").innerHTML = "Work"
 	 button.onclick = () => { stopTimer() }
 
 	 timer = setInterval(() => {
@@ -89,15 +131,14 @@
 	     if (timeleft == 0) {
 		 stopTimer()
 		 beep()
-		 document.getElementById("workbreak").innerHTML = "Break"
-		 timeleft = 25*60
+		 timeleft = clock_length
 	     }
 	 }, 1000)
      }
 
      const resetTimer = () => {
 	 stopTimer()
-	 timeleft = 25*60
+	 timeleft = clock_length
 	 printTime(timeleft)
      }
 
@@ -110,6 +151,26 @@
 	 button.onclick = () => { startTimer() }
 
 	 printTime(timeleft)
+     }
+
+     const clicked = name => {
+	 // clear all selections
+	 document.getElementById("work").classList.remove("selected");
+	 document.getElementById("shortbreak").classList.remove("selected");
+	 document.getElementById("longbreak").classList.remove("selected");
+	 // mark the clicked item as selected
+	 document.getElementById(name).classList.add("selected");
+
+	 if (name === "work") {
+	     clock_length = 25*60;
+	     resetTimer();
+	 } else if (name === "shortbreak") {
+	     clock_length = 5*60;
+	     resetTimer();
+	 } else if (name === "longbreak") {
+	     clock_length = 10*60;
+	     resetTimer();
+	 }
      }
 
      const beep = () => {
